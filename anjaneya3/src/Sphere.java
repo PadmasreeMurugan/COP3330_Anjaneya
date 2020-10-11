@@ -5,22 +5,27 @@ public class Sphere extends Shape3D
     private double radius;
     private String ShapeName = "sphere";
 
+    //constructor
     public Sphere(double radius)
     {
         this.radius = radius;
-        this.ShapeName = ShapeName;
     }
 
+    //Postcondition: This function returns the name of the shape
     @Override
-    public String getName() {
+    public String getName()
+    {
         return ShapeName;
     }
 
+    //Postcondition: This function returns the area of the sphere
     @Override
-    public double getArea() {
-        return (4 * PI * radius * radius);
+    public double getArea()
+    {
+        return (4.0 * PI * radius * radius);
     }
 
+    //Postcondition: This function returns the volume of the sphere
     @Override
     public double getVolume()
     {
