@@ -232,11 +232,6 @@ class TaskListTest
         assertEquals(true, editedData.equals(tasks.tasks.get(0)));
     }
 
-    /*completingTaskItemChangesStatus()
-completingTaskItemFailsWithInvalidIndex()
-savedTaskListCanBeLoaded()
-uncompletingTaskItemChangesStatus()
-uncompletingTaskItemFailsWithInvalidIndex()*/
     @Test
     public void completingTaskItemChangesStatus()
     {
@@ -262,9 +257,6 @@ uncompletingTaskItemFailsWithInvalidIndex()*/
 
     }
 
-    /*uncompletingTaskItemChangesStatus()
-uncompletingTaskItemFailsWithInvalidIndex()*/
-
     @Test
     public void umcompletingTaskItemChangesStatus()
     {
@@ -289,8 +281,4 @@ uncompletingTaskItemFailsWithInvalidIndex()*/
         assertThrows(InvalidIndexException.class, () -> tasks.unmarkingTaskAsUncompleted(1));
 
     }
-
-
-
-
 }

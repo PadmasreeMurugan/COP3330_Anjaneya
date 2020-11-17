@@ -43,14 +43,17 @@ public class TaskList implements Serializable
     //displaying the current tasks
     public void displayCurrentTasks()
     {
+
+
         for (int i = 0; i < tasks.size(); i++)
         {
             TaskItem data = tasks.get(i);
-            if(data.getCompletionStatus() == null)
+
+            if((data.getCompletionStatus() == " "))
             {
                 System.out.format("%d) [%s] %s: %s %n", i, data.getDate(), data.getTitle(), data.getDescription());
             }
-            else
+            if(data.getCompletionStatus() != " ")
                 {
                     System.out.format("%d) %s [%s] %s: %s %n", i,data.getCompletionStatus(), data.getDate(), data.getTitle(), data.getDescription());
             }
@@ -61,11 +64,13 @@ public class TaskList implements Serializable
     //displaying the uncompleted tasks
     public void displayUncompletedTasks()
     {
+        System.out.println("Uncompleted Tasks\n");
+        System.out.println("-----------------");
         for (int i = 0; i < tasks.size(); i++)
         {
             TaskItem data = tasks.get(i);
 
-            if (data.getCompletionStatus() == null)
+            if (data.getCompletionStatus() == " ")
             {
                 System.out.format("%d) [%s] %s: %s %n", i, data.getDate(), data.getTitle(), data.getDescription());
             }
@@ -75,11 +80,13 @@ public class TaskList implements Serializable
     //displaying the completed tasks
     public void displayCompletedTasks()
     {
+        System.out.println("Completed Tasks\n");
+        System.out.println("-----------------");
         for (int i = 0; i < tasks.size(); i++)
         {
             TaskItem data = tasks.get(i);
 
-            if (data.getCompletionStatus() != null)
+            if (data.getCompletionStatus() !=  " ")
             {
                 System.out.format("%d) [%s] %s: %s %n", i, data.getDate(), data.getTitle(), data.getDescription());
             }
@@ -237,7 +244,6 @@ public class TaskList implements Serializable
                 TaskItem data = tasks.get(i);
 
                 output.format("%s %s %s %s %n",data.getTitle(),data.getDescription(), data.getDate(), data.getCompletionStatus());
-
             }
         }
         catch (FileNotFoundException ex)
@@ -254,29 +260,26 @@ public class TaskList implements Serializable
     {
         try
         {
-            File myObj = new File("tasks.txt");
+            File myObj = new File(FileName);
             Scanner sc = new Scanner(myObj);
-
-
 
             while (sc.hasNextLine())
             {
                 String data = sc.nextLine();
                 String[] values = data.split(" ");
 
-
                 String statusOfCompletion;
 
                 if(values.length <= 3)
                 {
-                    statusOfCompletion = null;
+                    statusOfCompletion = " ";
                 }
-                else
-                {
+
+                else{
                     statusOfCompletion = values[3];
                 }
 
-                TaskItem task = new TaskItem(values[0], values[1], values[2],statusOfCompletion );
+                TaskItem task = new TaskItem(values[0], values[1], values[2],statusOfCompletion);
                 tasks.add(task);
             }
 
@@ -285,78 +288,6 @@ public class TaskList implements Serializable
         }
 
     }
-
-
-
-   /* public void readTaskdata(String FileName)
-    {
-        try
-        {
-            Scanner sc = new Scanner(new File(FileName));
-            List<String> lines = new ArrayList<String>();
-            while (sc.hasNextLine())
-            {
-                lines.add(sc.nextLine());
-            }
-
-            String[] arr = lines.toArray(new String[lines.size()]);
-            String title = " ";
-            String description = " ";
-            String date = " ";
-            String completionStatus = " ";
-
-            TaskItem data = null;
-
-            for(int i = 0; i < arr.length; i = i+3)
-            {
-                for(int j = i; j <= (i+3); j++)
-                {
-                    if(j == i)
-                    {
-                       arr[j] = title;
-                    }
-
-                     if(j == (i+1))
-                    {
-                        arr[j] = description;
-                    }
-                    if(j == (i+2))
-                    {
-                         arr[j]= date;
-                    }
-                    if(j == (i+3))
-                    {
-                        arr[j] =  completionStatus;
-                    }
-                }
-                data = new TaskItem(title, description, date, completionStatus);
-                tasks.add(data);
-
-
-            System.out.printf("%s", arr[0]);
-
-            sc.close();
-
-           Scanner input = new Scanner(new File(FileName));
-
-            input.useDelimiter(" +"); //delimitor is one or more spaces
-
-            while(input.hasNext())
-            {
-                data = input.next();
-            }
-
-            input.close();
-
-        }
-        catch(FileNotFoundException e)
-        {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
 
 }
 
