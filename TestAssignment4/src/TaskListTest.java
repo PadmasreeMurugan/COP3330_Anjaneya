@@ -44,7 +44,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My First Task", "Programming Assignment 3", "2020-11-22", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.markingTaskCompleted(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.markingTaskCompleted(1));
 
     }
 
@@ -57,7 +57,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.editTaskDescription("To-do list assignment", 1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.editTaskDescription("To-do list assignment", 1));
     }
 
     /*Test 5*/
@@ -112,7 +112,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.editTaskTitle("Updated First task", 1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.editTaskTitle("Updated First task", 1));
     }
 
     /*Test 9*/
@@ -153,7 +153,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.editTaskDate("2020-12-12", 1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.editTaskDate("2020-12-12", 1));
     }
 
     /*Test 12*/
@@ -180,7 +180,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.getTaskDescription(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.getTaskDescription(1));
     }
 
     /*Test 14*/
@@ -205,7 +205,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.getTaskDate(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.getTaskDate(1));
     }
 
     /*Test 16*/
@@ -230,7 +230,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.getTaskTitle(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.getTaskTitle(1));
     }
 
     /*Test 18*/
@@ -277,7 +277,7 @@ class TaskListTest
     {
         TaskList tasks = new TaskList();
 
-        assertThrows(InvalidIndexException.class, () -> tasks.removeTaskItem(-2));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.removeTaskItem(-2));
     }
 
     /*Test 22*/
@@ -327,7 +327,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My First Task", "Programming Assignment 3", "2020-11-22", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.unmarkingTaskAsUncompleted(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.unmarkingTaskAsUncompleted(1));
 
     }
 
@@ -358,7 +358,7 @@ class TaskListTest
         TaskItem data = new TaskItem("My first task", "Programming Assignment 4", "2020-11-20", " ");
         tasks.add(data);
 
-        assertThrows(InvalidIndexException.class, () -> tasks.removeTaskItem(1));
+        assertThrows(InvalidTaskIndexException.class, () -> tasks.removeTaskItem(1));
     }
 
     @Test
