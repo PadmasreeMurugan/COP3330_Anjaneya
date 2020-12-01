@@ -1,5 +1,4 @@
-public class ContactItem
-{
+public class ContactItem {
     String firstName;
     String lastName;
     String phone;
@@ -185,3 +184,4 @@ class InvalidPhoneNumberException extends IllegalArgumentException
         super(message);
     }
 }
+

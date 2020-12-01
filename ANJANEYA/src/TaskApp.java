@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class TaskApp extends MainApp
+public class TaskApp
 {
     //declaring scanner object
     private static Scanner input = new Scanner(System.in);
@@ -23,8 +23,31 @@ public class TaskApp extends MainApp
         task.processMainMenu();
     }
 
+    //display Main menu
+    private void displayMainMenu()
+    {
+        System.out.println("Main Menu");
+        System.out.println("---------");
+        System.out.println("1) Create a new list");
+        System.out.println("2) Load an existing list");
+        System.out.println("3) Quit");
+    }
+
+    //get user input for main menu
+    private int getContinueResponseForMain()
+    {
+        displayMainMenu();
+        return input.nextInt();
+    }
+
+    //return true if user response for main menu is not equal to 3
+    private boolean shouldContinue(int userResponse)
+    {
+        return (userResponse != 3);
+    }
+
     //processes main menu options
-    private void processMainMenu()
+    public void processMainMenu()
     {
         int userResponse = getContinueResponseForMain();
 
@@ -32,9 +55,9 @@ public class TaskApp extends MainApp
         {
             if(userResponse == 1)
             {
-                System.out.println("new task list has been created\n");
-                listOfTasks.removeAllTaskItem();
+                System.out.println("new task list has been created");
                 createNewList();
+
             }
             if(userResponse == 2)
             {
@@ -61,7 +84,8 @@ public class TaskApp extends MainApp
             }
             if(userResponse == 2)
             {
-                addTaskItemData();
+                data = getTaskItemData();
+                storeTaskItem(data);
             }
 
             if(userResponse == 3)
@@ -101,7 +125,10 @@ public class TaskApp extends MainApp
     //user enters load an existing list
     private void loadExistingList()
     {
-        listOfTasks.removeAllTaskItem();
+        for(int i = 0; i < listOfTasks.sizeOfTaskList(); i++)
+        {
+            listOfTasks.remove(listOfTasks.tasks.get(i));
+        }
 
         if(listOfTasks.ListIsEmpty())
         {
@@ -112,7 +139,10 @@ public class TaskApp extends MainApp
 
         else
         {
-            listOfTasks.removeAllTaskItem();
+            for(int i = 0; i < listOfTasks.sizeOfTaskList(); i++)
+            {
+                listOfTasks.remove(listOfTasks.tasks.get(i));
+            }
             readTaskData();
             System.out.println("task list has been loaded");
             createNewList();
@@ -181,30 +211,35 @@ public class TaskApp extends MainApp
     }
 
     //getting an task item from user
-    private void addTaskItemData()
+    private TaskItem getTaskItemData()
     {
         TaskItem data = null;
 
-        try
+        while(true)
         {
-            String title = getTaskTitle();
-            String description = getTaskDescription();
-            String date = getTaskDate();
-            String completionMark = getCompletionMark();
+            try
+            {
+                String title = getTaskTitle();
+                String description = getTaskDescription();
+                String date = getTaskDate();
+                String completionMark = getCompletionMark();
 
-            data = new TaskItem(title,description, date, completionMark);
-            storeTaskItem(data);
+                data = new TaskItem(title,description, date, completionMark);
+                break;
+
+            }
+            catch (InvalidTitleException ex)
+            {
+
+                System.out.println("Warning: title must be at least 1 character long; Please enter again");
+            }
+            catch (InvalidDateException ex)
+            {
+
+                System.out.println("Warning: invalid due date; Please enter again");
+            }
         }
-        catch (InvalidTitleException ex)
-        {
-            listOfTasks.remove(data);
-            System.out.println("Warning: title must be at least 1 character long; Please enter again");
-        }
-        catch (InvalidDateException ex)
-        {
-            listOfTasks.remove(data);
-            System.out.println("Warning: invalid due date; Please enter again");
-        }
+        return data;
     }
 
     //storing the task item to the list of tasks
@@ -242,14 +277,15 @@ public class TaskApp extends MainApp
 
     private void editTasks()
     {
-        try
+        while(true)
         {
-            if(listOfTasks.tasks.isEmpty())
+            try
             {
-                System.out.println("Your task list is empty. Please add an item to edit");
-            }
-
-            else{
+                if(listOfTasks.tasks.isEmpty())
+                {
+                    System.out.println("Your task list is empty");
+                    break;
+                }
 
                 int userIndex = getEditIndex();
                 input.nextLine();
@@ -268,24 +304,25 @@ public class TaskApp extends MainApp
                 listOfTasks.editTaskTitle(title, userIndex);
                 listOfTasks.editTaskDescription(description, userIndex);
                 listOfTasks.editTaskDate(date, userIndex);
-            }
 
-        }
-        catch(InvalidTaskIndexException e)
-        {
-            System.out.println("Warning: Your index is invalid. no task can be edited\n");
-        }
-        catch (InvalidTitleException ex)
-        {
-            System.out.println("Warning: Your Title is invalid. Task is not edited\n");
-        }
-        catch (InvalidDateException ex)
-        {
-            System.out.println("Warning: Your Date is invalid. Task is not edited\n");
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
+                break;
+            }
+            catch(InvalidIndexException e)
+            {
+                System.out.println("Warning: Your index is invalid. Please try enter again");
+            }
+            catch (InvalidTitleException ex)
+            {
+                System.out.println("Warning: Your Title is invalid. Please enter again.");
+            }
+            catch (InvalidDateException ex)
+            {
+                System.out.println("Warning: Your Date is invalid. Please enter again");
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -302,22 +339,28 @@ public class TaskApp extends MainApp
     {
         int size = listOfTasks.sizeOfTaskList();
 
-        try
+        while(true)
         {
-            if(listOfTasks.ListIsEmpty())
+            try
             {
-                System.out.println("Your task list is empty. Please add an task item to remove\n");
-            }
+                if(listOfTasks.ListIsEmpty())
+                {
+                    System.out.println("Your task list is empty");
+                    break;
+                }
 
-            else
-            {
                 int index = getRemoveIndex();
                 listOfTasks.removeTaskItem(index);
+
+                if((size-1) == listOfTasks.sizeOfTaskList())
+                {
+                    break;
+                }
             }
-        }
-        catch(InvalidTaskIndexException e)
-        {
-            System.out.println("Warning: Invalid index. no task can be removed");
+            catch(InvalidIndexException e)
+            {
+                System.out.println("Warning: Invalid index. Please try enter again");
+            }
         }
     }
 
@@ -332,22 +375,26 @@ public class TaskApp extends MainApp
     //checking for exception and marking the task as completed
     private void markTaskAsCompleted( )
     {
-        try
+        while(true)
         {
-            if(listOfTasks.ListIsEmpty())
+            try
             {
-                System.out.println("Your task list is empty. Please add a task item to mark as completed");
-            }
-
-            else {
+                if(listOfTasks.ListIsEmpty())
+                {
+                    System.out.println("Your task list is empty");
+                    break;
+                }
 
                 int index = getMarkIndex();
                 listOfTasks.markingTaskCompleted(index);
+
+                break;
+
             }
-        }
-        catch(InvalidTaskIndexException e)
-        {
-            System.out.println("Warning: Invalid index. Please try enter again");
+            catch(InvalidIndexException e)
+            {
+                System.out.println("Warning: Invalid index. Please try enter again");
+            }
         }
     }
 
@@ -367,22 +414,26 @@ public class TaskApp extends MainApp
     //checking for exception and unmarking the task as completed
     private void ummarkTaskAsUncompleted( )
     {
-        try
+        while(true)
         {
-            if(listOfTasks.ListIsEmpty())
+            try
             {
-                System.out.println("Your task list is empty. Please add a task item to unmark as completed");
-            }
+                if(listOfTasks.ListIsEmpty())
+                {
+                    System.out.println("Your task list is empty");
+                    break;
+                }
 
-            else
-            {
                 int index = getUnmarkIndex();
                 listOfTasks.unmarkingTaskAsUncompleted(index);
+
+                break;
+
             }
-        }
-        catch(InvalidIndexException e)
-        {
-            System.out.println("Warning: Invalid index. Please try enter again");
+            catch(InvalidIndexException e)
+            {
+                System.out.println("Warning: Invalid index. Please try enter again");
+            }
         }
     }
 
@@ -395,16 +446,8 @@ public class TaskApp extends MainApp
 
     private void writeListOfTasks()
     {
-        if(listOfTasks.ListIsEmpty())
-        {
-            System.out.println("Your task list should contain one or more task items. task list cannot be saved\n");
-        }
-        else{
-            String filename = getFileNameToSave();
-            listOfTasks.writeTaskdata(filename);
-            System.out.println("task list has been saved\n");
-        }
-
+        String filename = getFileNameToSave();
+        listOfTasks.writeTaskdata(filename);
     }
 
     private String getFileNameToSave()
@@ -421,34 +464,39 @@ public class TaskApp extends MainApp
 
     private void readTaskData()
     {
-        try
+        while(true)
         {
-            String fileName = getFileNameToLoad();
-            File input = new File(fileName);
-            Scanner scanner = new Scanner(input);
-
-            while (scanner.hasNextLine())
+            try
             {
-                String taskData = scanner.nextLine();
-                String[] values = taskData.split(";");
+                String fileName = getFileNameToLoad();
+                File input = new File(fileName);
+                Scanner scanner = new Scanner(input);
 
-                String statusOfCompletion;
-
-                if(values.length <= 3)
+                while (scanner.hasNextLine())
                 {
-                    statusOfCompletion = " ";
-                }
-                else {
-                    statusOfCompletion = values[3];
+                    String taskData = scanner.nextLine();
+                    String[] values = taskData.split(";");
+
+                    String statusOfCompletion;
+
+                    if(values.length <= 3)
+                    {
+                        statusOfCompletion = " ";
+                    }
+                    else {
+                        statusOfCompletion = values[3];
+                    }
+
+                    TaskItem task = new TaskItem(values[0], values[1], values[2],statusOfCompletion);
+                    storeTaskItem(task);
                 }
 
-                TaskItem task = new TaskItem(values[0], values[1], values[2],statusOfCompletion);
-                storeTaskItem(task);
+                break;
             }
-        }
-        catch (FileNotFoundException fileNotFoundException)
-        {
-            System.out.println("Warning: Unable to find the file. File cannot be loaded");
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                System.out.println("Warning: Unable to find the file. Please try again");
+            }
         }
     }
 }

@@ -2,8 +2,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class TaskItem {
-
+public class TaskItem
+{
     private String title;
     private String description;
     private String date;
@@ -58,12 +58,12 @@ public class TaskItem {
         try
         {
             LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
-            return true;
         }
         catch (DateTimeParseException e)
         {
             return false;
         }
+        return true;
     }
 
     public String getTitle()
@@ -103,6 +103,3 @@ class InvalidDateException extends IllegalArgumentException
         super(msg);
     }
 }
-
-
-

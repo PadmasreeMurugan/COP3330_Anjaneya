@@ -146,7 +146,7 @@ public class ContactList
 
             data.setContactItem(firstName, lastName, phone, emailAddress);
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
     }
 
     public void editContactFirstName(String firstName, int userIndex)
@@ -157,7 +157,7 @@ public class ContactList
 
             data.setFirstName(firstName);
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
     }
 
     public void editContactLastName(String lastName, int userIndex)
@@ -168,7 +168,7 @@ public class ContactList
 
             data.setLastName(lastName);
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
     }
 
     public void editContactPhone(String phone, int userIndex)
@@ -179,7 +179,7 @@ public class ContactList
 
             data.setPhone(phone);
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
     }
 
     public void editContactEmailAddress(String emailAddress, int userIndex)
@@ -190,7 +190,7 @@ public class ContactList
 
             data.setEmailAddress(emailAddress);
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
     }
 
     //getting contact first name
@@ -207,7 +207,7 @@ public class ContactList
                 firstName = data.getFirstName();
             }
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
         return firstName;
     }
 
@@ -225,7 +225,7 @@ public class ContactList
                 lastName = data.getLastName();
             }
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
         return lastName;
     }
 
@@ -243,7 +243,7 @@ public class ContactList
                 phone = data.getPhone();
             }
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
         return phone;
     }
 
@@ -261,7 +261,7 @@ public class ContactList
                 email = data.getEmailAddress();
             }
         }
-        else throw new InvalidIndexException("Index is Invalid");
+        else throw new InvalidContactIndexException("Index is Invalid");
         return email;
     }
 
@@ -271,7 +271,7 @@ public class ContactList
         {
             remove(contacts.get(userIndex));
         }
-        else throw new InvalidIndexException("Index is not valid");
+        else throw new InvalidContactIndexException("Index is not valid");
     }
 
     public void removeAllContactItem()
@@ -361,12 +361,10 @@ public class ContactList
         }
     }
 }
-
-class InvalidIndexException extends IndexOutOfBoundsException
+class InvalidContactIndexException extends IndexOutOfBoundsException
 {
-    public InvalidIndexException(String msg)
+    public InvalidContactIndexException(String msg)
     {
         super(msg);
     }
 }
-

@@ -208,7 +208,7 @@ class ContactItemTest
 
         ContactItem data = new ContactItem(firstName, lastName, phone, emailAddress);
 
-        assertEquals(data.toString(), "Padmasree"+ " " + "Murugan");
+        assertEquals(data.toString(firstName, lastName, phone, emailAddress), "Padmasree"+ "Murugan" + "123-456-7891"+"unknown@cia.gov");
     }
 
 }

@@ -52,54 +52,18 @@ public class TaskList
     {
         System.out.println("Current Tasks");
         System.out.println("--------------");
-
-        if(ListIsEmpty())
+        for (int i = 0; i < tasks.size(); i++)
         {
-            System.out.println("Your task list is empty. Please add an task item\n");
-        }
 
-        try {
-            if (sizeOfTaskList() >= 1) {
-                for (int i = 0; i < tasks.size(); i++) {
-                    TaskItem data = tasks.get(i);
+            TaskItem data = tasks.get(i);
 
-                    if ((data.getCompletionStatus() == " ")) {
-                        System.out.format("%d) [%s] %s: %s %n", i, data.getDate(), data.getTitle(), data.getDescription());
-                    }
-                    if (data.getCompletionStatus() != " ") {
-                        System.out.format("%d) %s [%s] %s: %s %n", i, data.getCompletionStatus(), data.getDate(), data.getTitle(), data.getDescription());
-                    }
-                }
+            if ((data.getCompletionStatus() == " ")) {
+                System.out.format("%d) [%s] %s: %s %n", i, data.getDate(), data.getTitle(), data.getDescription());
+            }
+            if (data.getCompletionStatus() != " ") {
+                System.out.format("%d) %s [%s] %s: %s %n", i, data.getCompletionStatus(), data.getDate(), data.getTitle(), data.getDescription());
             }
         }
-        catch(NullPointerException ex)
-        {
-            System.out.println("Your task list is empty. Please add an task item\n");
-        }
-    }
-
-    /*OPTION2: ADD AN ITEM*/
-
-    public TaskItem addingTaskItem(String title, String description, String date, String completionMark)
-    {
-        TaskItem data = null;
-
-        try
-        {
-            data = new TaskItem(title,description, date, completionMark);
-            add(data);
-        }
-        catch (InvalidTitleException ex)
-        {
-            tasks.remove(data);
-            System.out.println("Warning: title must be at least 1 character long; task not created");
-        }
-        catch (InvalidDateException ex)
-        {
-            tasks.remove(data);
-            System.out.println("Warning: invalid due date; task not created");
-        }
-        return data;
     }
 
     /*OPTION3: EDIT AN ITEM*/
@@ -112,7 +76,7 @@ public class TaskList
 
             data.setTitle(title);
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
     }
 
     public void editTaskDescription(String description, int userIndex)
@@ -123,7 +87,7 @@ public class TaskList
 
             data.setDescription(description);
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
     }
 
     public void editTaskDate(String date, int userIndex)
@@ -134,7 +98,7 @@ public class TaskList
 
             data.setDate(date);
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
     }
 
     /*OPTION 4: REMOVE AN ITEM*/
@@ -146,12 +110,7 @@ public class TaskList
         {
             remove(tasks.get(userIndex));
         }
-        else throw new InvalidTaskIndexException("Index is not valid");
-    }
-
-    public void removeAllTaskItem()
-    {
-        tasks.removeAll(tasks);
+        else throw new InvalidIndexException("Index is not valid");
     }
 
     /*OPTION5: MARK AN ITEM AS COMPLETED*/
@@ -180,7 +139,7 @@ public class TaskList
 
             data.setCompletionStatus("*** ");
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
     }
 
     /*OPTION 6: UNMARK AN ITEM AS COMPLETED*/
@@ -209,13 +168,15 @@ public class TaskList
 
             data.setCompletionStatus(" ");
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
     }
 
     /*OPTION 7: SAVE THE LIST*/
 
     public void writeTaskdata(String fileName)
     {
+        while(true)
+        {
             try(Formatter output = new Formatter(fileName))
             {
                 for (int i = 0; i < tasks.size(); i++)
@@ -224,15 +185,17 @@ public class TaskList
 
                     output.format("%s;%s;%s;%s;%n",data.getTitle(),data.getDescription(), data.getDate(), data.getCompletionStatus());
                 }
+                break;
             }
             catch (FileNotFoundException ex)
             {
-                System.out.println("Warning: Unable to find the file. File cannot be saved");
+                System.out.println("Warning: Unable to find the file. Please try again");
             }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
+        }
     }
 
     public void readTasks(String fileName)
@@ -242,33 +205,28 @@ public class TaskList
             File input = new File(fileName);
             Scanner scanner = new Scanner(input);
 
-            readTasksLineByLine(scanner);
+            while (scanner.hasNextLine())
+            {
+                String taskData = scanner.nextLine();
+                String[] values = taskData.split(" ");
+
+                String statusOfCompletion;
+
+                if(values.length <= 3)
+                {
+                    statusOfCompletion = " ";
+                }
+                else {
+                    statusOfCompletion = values[3];
+                }
+
+                TaskItem task = new TaskItem(values[0], values[1], values[2], statusOfCompletion);
+                tasks.add(task);
+            }
         }
         catch (FileNotFoundException ex)
         {
-            System.out.println("Warning: Unable to find the file. File cannot be loaded");
-        }
-    }
-
-    public void readTasksLineByLine(Scanner scanner)
-    {
-        while (scanner.hasNextLine())
-        {
-            String taskData = scanner.nextLine();
-            String[] values = taskData.split(";");
-
-            String statusOfCompletion;
-
-            if(values.length <= 3)
-            {
-                statusOfCompletion = " ";
-            }
-            else {
-                statusOfCompletion = values[3];
-            }
-
-            TaskItem task = new TaskItem(values[0], values[1], values[2], statusOfCompletion);
-            tasks.add(task);
+            System.out.println("Warning: Unable to find the file. Please try again");
         }
     }
 
@@ -286,7 +244,7 @@ public class TaskList
                 title = data.getTitle();
             }
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
         return title;
     }
 
@@ -305,7 +263,7 @@ public class TaskList
             }
             return description;
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
 
     }
 
@@ -323,7 +281,7 @@ public class TaskList
                 date = data.getDate();
             }
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
         return date;
     }
 
@@ -339,19 +297,16 @@ public class TaskList
             completionMark = data.getCompletionStatus();
             return completionMark;
         }
-        else throw new InvalidTaskIndexException("Index is Invalid");
+        else throw new InvalidIndexException("Index is Invalid");
 
     }
 }
 
-class InvalidTaskIndexException extends IndexOutOfBoundsException
+class InvalidIndexException extends IndexOutOfBoundsException
 {
-    public InvalidTaskIndexException(String msg)
+    public InvalidIndexException(String msg)
     {
         super(msg);
     }
 
 }
-
-
-

@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class ContactApp extends TaskApp
+public class ContactApp
 {
     //declaring scanner object
     private static Scanner input = new Scanner(System.in);
@@ -16,18 +16,42 @@ public class ContactApp extends TaskApp
         listOfContacts = new ContactList();
     }
 
-    //display main menu  - inherited from TaskApp (which extends App) class
-    //get response for main menu - inherited from TaskApp (which extends App) class
-    //check should continue for main menu - inherited from (which extends App) TaskApp class
+    //display Main menu
+    private void displayMainMenu()
+    {
+        System.out.println("Main Menu");
+        System.out.println("---------");
+        System.out.println("1) Create a new list");
+        System.out.println("2) Load an existing list");
+        System.out.println("3) Quit");
+    }
 
-    /* POLYMORPHISM APPLIED */
+    //get user input for main menu
+    private int getContinueResponseForMain()
+    {
+        displayMainMenu();
+        return input.nextInt();
+    }
+
+    //return true if user response for main menu is not equal to 3
+    private boolean shouldContinue(int userResponse)
+    {
+        return (userResponse != 3);
+    }
+
+    //Main function
+    public static void main(String[] args)
+    {
+        ContactApp contact = new ContactApp();
+        contact.processMainMenu();
+    }
 
     //processes main menu options
     public void processMainMenu()
     {
         int userResponse = getContinueResponseForMain();
 
-        while(shouldContinueForMainMenu(userResponse))
+        while(shouldContinue(userResponse))
         {
             if(userResponse == 1)
             {
@@ -40,6 +64,7 @@ public class ContactApp extends TaskApp
                 loadExistingList();
             }
             userResponse = getContinueResponseForMain();
+            input.nextLine();
         }
     }
 
@@ -67,10 +92,8 @@ public class ContactApp extends TaskApp
         return input.nextLine();
     }
 
-    /* POLYMORPHISM APPLIED */
-
     //display List Opeartion Menu
-    public void displayListOperationMenu()
+    private void displayListOperationMenu()
     {
         System.out.println("List Operation Menu");
         System.out.println("--------------------");
@@ -82,15 +105,19 @@ public class ContactApp extends TaskApp
         System.out.println("6) quit to the main menu");
     }
 
-    //getContinueResponseForListMenu - inherited from TaskApp (which extends App) class
+    //get user input for list operation menu
+    private int getContinueResponseForListMenu()
+    {
+        displayListOperationMenu();
+        return input.nextInt();
+    }
 
-    /* POLYMORPHISM APPLIED */
-
-    //user response for list operation menu menu is not equal to 6, then continue
-    public boolean shouldContinueList (int userResponse)
+    //user response for list operation menu menu is not equal to 8, then continue
+    private boolean shouldContinueList (int userResponse)
     {
         return (userResponse != 6);
     }
+
 
     private String getNewFirstName(int userIndex)
     {
@@ -128,18 +155,28 @@ public class ContactApp extends TaskApp
         return input.nextInt();
     }
 
-    //getFileNameToSave - inherited from TaskApp (which extends App) class
-    //getFileNameToLoad - inherited from TaskApp(which extends App) class
+    private String getFileNameToSave()
+    {
+        System.out.println("Enter the filename to save as: ");
+        return input.next();
+    }
+
+    private String getFileNameToLoad()
+    {
+        System.out.println("Enter the filename to load : ");
+        return input.next();
+    }
 
     private void createNewList()
     {
         int response = getContinueResponseForListMenu();
+        input.nextLine();
 
         while(shouldContinueList(response))
         {
             if(response == 1)
             {
-                viewList();
+                displayCurrentContacts();
             }
 
             if(response == 2)
@@ -149,16 +186,16 @@ public class ContactApp extends TaskApp
                 String phone = getPhoneNumber();
                 String emailAddress = getEmailAddress();
 
-                addItem(firstName, lastName, phone, emailAddress);
+                addContactItem(firstName, lastName, phone, emailAddress);
             }
             if(response == 3)
             {
-                editItem();
+                editContacts();
             }
 
             if(response == 4)
             {
-                removeItem();
+                removeContacts();
             }
 
             if(response == 5)
@@ -166,30 +203,21 @@ public class ContactApp extends TaskApp
                 saveTheList();
             }
             response = getContinueResponseForListMenu();
+            input.nextLine();
         }
-    }
-
-    public void viewList()
-    {
-        listOfContacts.displayCurrentContacts();
     }
 
     private void displayCurrentContacts()
     {
-        viewList();
-    }
-
-    public void addItem(String firstname, String lastname, String phone, String emailAddress)
-    {
-        listOfContacts.addingContactItem(firstname, lastname, phone, emailAddress);
+        listOfContacts.displayCurrentContacts();
     }
 
     private void addContactItem(String firstname, String lastname, String phone, String emailAddress)
     {
-        addItem(firstname, lastname, phone, emailAddress);
+        listOfContacts.addingContactItem(firstname, lastname, phone, emailAddress);
     }
 
-    public void editItem()
+    private void editContacts()
     {
         String firstName = "";
         String lastName = "";
@@ -227,12 +255,7 @@ public class ContactApp extends TaskApp
         }
     }
 
-    private void editContacts()
-    {
-        editItem();
-    }
-
-    public void removeItem()
+    private void removeContacts()
     {
         int size = listOfContacts.sizeOfContactList();
 
@@ -250,32 +273,6 @@ public class ContactApp extends TaskApp
             System.out.println("Warning: Your index is invalid; no contact can be removed");
         }
     }
-
-    private void removeContacts()
-    {
-        removeItem();
-    }
-
-    public void writeToFileAndSaveTheList()
-    {
-        if(listOfContacts.newListIsEmpty())
-        {
-            System.out.println("Your contact list should contain one or more contact items ");
-            System.out.println("contact list cannot be saved");
-        }
-        else
-        {
-            String filename = getFileNameToSave();
-            listOfContacts.writeContactdata(filename);
-            System.out.println("contact list has been saved\n");
-        }
-    }
-
-    private void saveTheList()
-    {
-        writeToFileAndSaveTheList();
-    }
-
 
     private void readContacts(String fileName)
     {
@@ -296,24 +293,25 @@ public class ContactApp extends TaskApp
         }
     }
 
-    public void loadDataFromFile()
+    private void saveTheList()
     {
-        try
+        if(listOfContacts.newListIsEmpty())
         {
-            listOfContacts.removeAllContactItem();
-            String fileName = getFileNameToLoad();
-            readContacts(fileName);
+            System.out.println("Your contact list should contain one or more contact items ");
+            System.out.println("contact list cannot be saved");
         }
-        catch(Exception ex)
+        else
         {
-            System.out.println("Please load the file consisting of contact list and not task list");
-            System.out.println("File cannot be loaded");
+            String filename = getFileNameToSave();
+            listOfContacts.writeContactdata(filename);
+            System.out.println("contact list has been saved\n");
         }
-
     }
 
     private void loadExistingList()
     {
-        loadDataFromFile();
+        listOfContacts.removeAllContactItem();
+        String fileName = getFileNameToLoad();
+        readContacts(fileName);
     }
 }
